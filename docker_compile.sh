@@ -25,11 +25,18 @@ start_container() {
         -e https_proxy=https://$PROXY_ADDR \
         $ANDROID_IMAGE \
         tail -f /dev/null
+
+    container_exec git config --global http.proxy http://$PROXY_ADDR
+    container_exec git config --global https.proxy https://$PROXY_ADDR
 }
 
-# todo interactive as a noneprivileged user
+container_exec() {
+    docker exec -it $CONTAINER_NAME "$@"
+}
+
+# todo interact as a noneprivileged user
 interact() {
-    docker exec -it $CONTAINER_NAME bash
+    container_exec bash
 }
 
 cleanup() {
